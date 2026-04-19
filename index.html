@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nüra Fragrance – Perfume Finder</title>
+  <style>
+    :root{
+      --bg:#f6f5f2;
+      --card:#ffffff;
+      --text:#171717;
+      --muted:#6b6b6b;
+      --line:#e8e5dd;
+      --soft:#f1eee8;
+      --accent:#111111;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#f8f7f4 0%, #f2efe9 100%);
+      color:var(--text);
+      line-height:1.45;
+    }
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:32px 20px 60px;
+    }
+    .badge{
+      display:inline-block;
+      padding:8px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.8);
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    h1{
+      font-size:clamp(38px,6vw,72px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+      margin:18px 0 12px;
+      max-width:820px;
+    }
+    .lead{
+      font-size:clamp(17px,2.4vw,21px);
+      color:var(--muted);
+      max-width:760px;
+      margin-bottom:28px;
+    }
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:26px;
+    }
+    .btn, button{
+      border:0;
+      background:var(--accent);
+      color:#fff;
+      padding:14px 18px;
+      border-radius:16px;
+      font-size:15px;
+      cursor:pointer;
+      transition:.2s ease;
+      text-decoration:none;
+      display:inline-block;
+    }
+    .btn.secondary, button.secondary{
+      background:#fff;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+    .btn:hover, button:hover{transform:translateY(-1px)}
+    .grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:24px;
+      align-items:start;
+    }
+    .card{
+      background:rgba(255,255,255,.88);
+      backdrop-filter: blur(8px);
+      border:1px solid var(--line);
+      border-radius:30px;
+      box-shadow:0 8px 30px rgba(0,0,0,.03);
+    }
+    .main-card{padding:28px}
+    .side-card{padding:22px; margin-bottom:20px}
+    .progress{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom:22px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .bar{
+      width:150px;
+      height:8px;
+      background:var(--soft);
+      border-radius:999px;
+      overflow:hidden;
+      flex-shrink:0;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background:var(--accent);
+      transition:width .25s ease;
+    }
+    .question-title{
+      font-size:clamp(28px,3.4vw,38px);
+      line-height:1.08;
+      margin:0 0 22px;
+      letter-spacing:-.03em;
+    }
+    .options{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .option{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      padding:18px 16px;
+      border-radius:20px;
+      text-align:left;
+      font-size:16px;
+      font-weight:600;
+    }
+    .option:hover{border-color:#bdb8ad}
+    .nav-row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+    .results-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .results-head h2{
+      font-size:clamp(28px,3vw,36px);
+      margin:0;
+      letter-spacing:-.03em;
+    }
+    .results-head p{
+      color:var(--muted);
+      margin:8px 0 0;
+    }
+    .result{
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:22px;
+      background:#fff;
+      margin-top:14px;
+    }
+    .result-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .eyebrow{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+    .result h3{
+      margin:0;
+      font-size:30px;
+      letter-spacing:-.03em;
+    }
+    .reference{
+      margin:8px 0 0;
+      color:var(--muted);
+    }
+    .score{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:14px;
+      color:var(--text);
+      background:var(--soft);
+    }
+    .desc{margin:16px 0 10px; font-size:16px}
+    .notes{color:var(--muted); font-size:14px}
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:16px;
+    }
+    .tag{
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--soft);
+      font-size:13px;
+    }
+    .side-card h3{
+      margin:0 0 12px;
+      font-size:19px;
+      letter-spacing:-.02em;
+    }
+    .side-card p, .side-card li{
+      color:var(--muted);
+      font-size:14px;
+    }
+    .answers{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .cta-section{
+      margin-top:28px;
+      padding:28px;
+      background:linear-gradient(135deg,#111 0%, #2a2a2a 100%);
+      color:#fff;
+      border-radius:30px;
+    }
+    .cta-section h2{margin:0 0 10px; font-size:34px; letter-spacing:-.03em}
+    .cta-section p{margin:0 0 18px; color:#ddd; max-width:680px}
+    .small-note{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:12px;
+    }
+    .hidden{display:none}
+    @media (max-width: 920px){
+      .grid{grid-template-columns:1fr}
+    }
+    @media (max-width: 640px){
+      .options{grid-template-columns:1fr}
+      .main-card{padding:22px}
+      .wrap{padding:24px 14px 50px}
+      .cta-section{padding:22px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="badge">Nüra Fragrance • Premium Finder</div>
+    <h1>Discover your signature scent</h1>
+    <p class="lead">
+      Find the fragrance that truly represents you. In just a few steps, we match your taste with our signature creations.
+    </p>
+    <div class="hero-actions">
+      <a href="#finder" class="btn">Start the experience</a>
+      <a href="https://t.me/your_bot_username" class="btn secondary">Chat on Telegram</a>
+    </div>
+
+    <div class="grid" id="finder">
+      <div class="card main-card">
+        <div id="quizView">
+          <div class="progress">
+            <span id="stepText">Step 1 of 5</span>
+            <div class="bar"><div id="progressBar"></div></div>
+          </div>
+          <h2 class="question-title" id="questionTitle"></h2>
+          <div class="options" id="options"></div>
+          <div class="nav-row">
+            <button class="secondary" id="backBtn">Back</button>
+            <button class="secondary" id="resetBtn">Reset</button>
+          </div>
+        </div>
+
+        <div id="resultsView" class="hidden">
+          <div class="results-head">
+            <div>
+              <h2>Your signature matches</h2>
+              <p>Three curated suggestions based on your answers.</p>
+            </div>
+            <button id="restartBtn">Retake the finder</button>
+          </div>
+          <div id="results"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card side-card">
+          <h3>Why this works</h3>
+          <p>It uses your proprietary names first, while still making the inspiration clear enough for the customer.</p>
+          <p>It is fast, premium-looking, and easy to turn into a mini site before your Shopify store is ready.</p>
+        </div>
+
+        <div class="card side-card">
+          <h3>Your selected preferences</h3>
+          <div class="answers" id="answersBox">
+            <span class="small-note">No answers yet</span>
+          </div>
+        </div>
+
+        <div class="card side-card">
+          <h3>Why Nüra Fragrance</h3>
+          <ul>
+            <li>High concentration (≥30% oil)</li>
+            <li>Long-lasting performance</li>
+            <li>Carefully selected inspirations</li>
+            <li>Accessible luxury</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h2>Want a more precise recommendation?</h2>
+      <p>Tell us your preferences directly and we’ll guide you personally through Telegram while the full collection is being prepared.</p>
+      <a href="https://t.me/your_bot_username" class="btn">Chat with us on Telegram</a>
+    </div>
+  </div>
+
+  <script>
+    const catalog = [
+      {
+        id: 44,
+        name: "Monarch",
+        target: ["man"],
+        profile: ["fresh","fruity","woody","powerful","elegant"],
+        use: ["daily","evening","special"],
+        intensity: ["medium","strong"],
+        season: ["all","spring","summer","autumn"],
+        notes: "Pineapple, bergamot, apple, blackcurrant; birch, jasmine, patchouli, rose; musk, ambergris, vanilla, oakmoss.",
+        description: "Fresh, elegant and powerful. A signature scent with brightness, depth and strong presence.",
+        reference: "Monarch • inspired by Aventus Creed (N.44)"
+      },
+      {
+        id: 48,
+        name: "Deep Blue",
+        target: ["man"],
+        profile: ["fresh","citrus","elegant","clean"],
+        use: ["daily","office","evening"],
+        intensity: ["soft","medium"],
+        season: ["all","spring","summer","autumn"],
+        notes: "Grapefruit, lemon, lime, bergamot; apple, blackcurrant, jasmine, rose; vetiver, ambergris, musk, vanilla.",
+        description: "Clean, refined and versatile. Perfect for daily wear with a modern elegant touch.",
+        reference: "Deep Blue • inspired by Blue de Chanel (N.48)"
+      },
+      {
+        id: 47,
+        name: "Ardor",
+        target: ["man"],
+        profile: ["fresh","citrus","bright","elegant"],
+        use: ["daily","special"],
+        intensity: ["medium"],
+        season: ["spring","summer","all"],
+        notes: "Lemon, grapefruit, mint, pink pepper; ginger, nutmeg, jasmine; incense, sandalwood, cedar, vetiver.",
+        description: "Bright, energetic and sophisticated. A premium fresh scent with a strong identity.",
+        reference: "Ardor • inspired by Roja Elysium (N.47)"
+      },
+      {
+        id: 45,
+        name: "Velvet Man",
+        target: ["man"],
+        profile: ["elegant","powdery","woody","sensual"],
+        use: ["evening","special"],
+        intensity: ["medium","strong"],
+        season: ["autumn","winter"],
+        notes: "Lavender; iris, ambrette; vetiver, cedar.",
+        description: "Elegant, deep and refined. Ideal for evening wear and a more dressed-up mood.",
+        reference: "Velvet Man • inspired by Dior Homme Intense (N.45)"
+      },
+      {
+        id: 42,
+        name: "Florea",
+        target: ["woman"],
+        profile: ["floral","clean","elegant","soft"],
+        use: ["daily","special"],
+        intensity: ["soft","medium"],
+        season: ["spring","summer","all"],
+        notes: "Jasmine sambac; cashmeran woods; white amber.",
+        description: "Feminine, luminous and modern. Soft yet clearly memorable.",
+        reference: "Florea • inspired by My Way Armani (N.42)"
+      },
+      {
+        id: 46,
+        name: "Elara",
+        target: ["woman"],
+        profile: ["sweet","floral","clean","modern"],
+        use: ["daily","evening","special"],
+        intensity: ["soft","medium"],
+        season: ["all","spring","autumn"],
+        notes: "Pear, bergamot, neroli; jasmine, orange blossom, neroli; amber, vanilla, white musks.",
+        description: "Modern, soft and very wearable. Perfect for those who love a clean sweet elegance.",
+        reference: "Elara • inspired by Prada Paradoxe (N.46)"
+      },
+      {
+        id: 43,
+        name: "Luvior",
+        target: ["man"],
+        profile: ["sweet","fresh","powerful","playful"],
+        use: ["evening","special","daily"],
+        intensity: ["medium","strong"],
+        season: ["autumn","winter","spring"],
+        notes: "Mint, green apple, lemon; tonka bean, ambroxan, geranium; vanilla, vetiver, cedar, musk.",
+        description: "More playful, sweeter and impactful, with youthful energy and strong projection.",
+        reference: "Luvior • inspired by Eros Versace (N.43)"
+      },
+      {
+        id: 38,
+        name: "Mirage",
+        target: ["woman","unisex"],
+        profile: ["fruity","sweet","musky","bold"],
+        use: ["daily","evening","special"],
+        intensity: ["medium","strong"],
+        season: ["spring","summer","autumn"],
+        notes: "Passion fruit, peach, pear, raspberry, cassis; lily of the valley; musk, vanilla, woods, heliotrope.",
+        description: "Explosive fruity sweetness with a sensual musky trail. Bold and very recognizable.",
+        reference: "Mirage • inspired by Kirkè Tiziana Terenzi (N.38)"
+      }
+    ];
+
+    const questions = [
+      {
+        key: "target",
+        title: "Who are you shopping for?",
+        options: [
+          { value: "man", label: "Man" },
+          { value: "woman", label: "Woman" },
+          { value: "unisex", label: "Unisex" }
+        ]
+      },
+      {
+        key: "profile",
+        title: "Which style attracts you most?",
+        options: [
+          { value: "fresh", label: "Fresh" },
+          { value: "sweet", label: "Sweet" },
+          { value: "elegant", label: "Elegant" },
+          { value: "floral", label: "Floral" },
+          { value: "woody", label: "Woody" },
+          { value: "fruity", label: "Fruity" }
+        ]
+      },
+      {
+        key: "use",
+        title: "When will you wear it the most?",
+        options: [
+          { value: "daily", label: "Everyday" },
+          { value: "office", label: "Office" },
+          { value: "evening", label: "Evening" },
+          { value: "special", label: "Special occasions" }
+        ]
+      },
+      {
+        key: "intensity",
+        title: "What intensity do you prefer?",
+        options: [
+          { value: "soft", label: "Soft" },
+          { value: "medium", label: "Balanced" },
+          { value: "strong", label: "Strong" }
+        ]
+      },
+      {
+        key: "season",
+        title: "Which season do you imagine it for?",
+        options: [
+          { value: "all", label: "All year" },
+          { value: "spring", label: "Spring" },
+          { value: "summer", label: "Summer" },
+          { value: "autumn", label: "Autumn" },
+          { value: "winter", label: "Winter" }
+        ]
+      }
+    ];
+
+    const labels = {
+      man:"Man", woman:"Woman", unisex:"Unisex",
+      fresh:"Fresh", sweet:"Sweet", elegant:"Elegant", floral:"Floral", woody:"Woody", fruity:"Fruity",
+      daily:"Everyday", office:"Office", evening:"Evening", special:"Special occasions",
+      soft:"Soft", medium:"Balanced", strong:"Strong",
+      all:"All year", spring:"Spring", summer:"Summer", autumn:"Autumn", winter:"Winter",
+      citrus:"Citrus", clean:"Clean", bright:"Bright", powdery:"Powdery", sensual:"Sensual", modern:"Modern", playful:"Playful", musky:"Musky", bold:"Bold", powerful:"Powerful"
+    };
+
+    let step = 0;
+    let answers = {};
+
+    const quizView = document.getElementById("quizView");
+    const resultsView = document.getElementById("resultsView");
+    const questionTitle = document.getElementById("questionTitle");
+    const optionsBox = document.getElementById("options");
+    const stepText = document.getElementById("stepText");
+    const progressBar = document.getElementById("progressBar");
+    const answersBox = document.getElementById("answersBox");
+    const resultsBox = document.getElementById("results");
+    const backBtn = document.getElementById("backBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    function updateAnswersBox(){
+      const entries = Object.values(answers);
+      if(!entries.length){
+        answersBox.innerHTML = '<span class="small-note">No answers yet</span>';
+        return;
+      }
+      answersBox.innerHTML = entries.map(v => `<span class="tag">${labels[v] || v}</span>`).join("");
+    }
+
+    function renderQuestion(){
+      const q = questions[step];
+      stepText.textContent = `Step ${step + 1} of ${questions.length}`;
+      progressBar.style.width = `${((step + 1) / questions.length) * 100}%`;
+      questionTitle.textContent = q.title;
+      optionsBox.innerHTML = q.options.map(opt => `
+        <button class="option" onclick="selectAnswer('${opt.value}')">${opt.label}</button>
+      `).join("");
+      backBtn.disabled = step === 0;
+      backBtn.style.opacity = step === 0 ? ".45" : "1";
+      updateAnswersBox();
+    }
+
+    function scorePerfume(perfume){
+      let score = 0;
+      Object.entries(answers).forEach(([key, value]) => {
+        if (perfume[key] && perfume[key].includes(value)) score += 1;
+        if (key === "target" && value === "unisex" && perfume.target.includes("unisex")) score += 1;
+      });
+      return score;
+    }
+
+    function showResults(){
+      const ranked = [...catalog]
+        .map(item => ({...item, score: scorePerfume(item)}))
+        .sort((a,b) => b.score - a.score)
+        .slice(0,3);
+
+      resultsBox.innerHTML = ranked.map((perfume, index) => `
+        <div class="result">
+          <div class="result-top">
+            <div>
+              <div class="eyebrow">Suggestion ${index + 1}</div>
+              <h3>${perfume.name}</h3>
+              <p class="reference">${perfume.reference}</p>
+            </div>
+            <div class="score">Match ${perfume.score}/${Object.keys(answers).length}</div>
+          </div>
+          <p class="desc">${perfume.description}</p>
+          <p class="notes">${perfume.notes}</p>
+          <div class="tags">
+            ${perfume.profile.slice(0,4).map(tag => `<span class="tag">${labels[tag] || tag}</span>`).join("")}
+          </div>
+          <div class="nav-row">
+            <a href="https://t.me/your_bot_username" class="btn">Get advice on Telegram</a>
+            <a href="#finder" class="btn secondary" onclick="restartFinder()">Compare again</a>
+          </div>
+        </div>
+      `).join("");
+
+      quizView.classList.add("hidden");
+      resultsView.classList.remove("hidden");
+      updateAnswersBox();
+    }
+
+    window.selectAnswer = function(value){
+      answers[questions[step].key] = value;
+      if(step < questions.length - 1){
+        step += 1;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function resetAll(){
+      step = 0;
+      answers = {};
+      resultsView.classList.add("hidden");
+      quizView.classList.remove("hidden");
+      renderQuestion();
+    }
+
+    window.restartFinder = resetAll;
+    backBtn.addEventListener("click", () => {
+      if(step > 0){
+        step -= 1;
+        delete answers[questions[step + 1]?.key];
+        renderQuestion();
+      }
+    });
+    resetBtn.addEventListener("click", resetAll);
+    restartBtn.addEventListener("click", resetAll);
+
+    renderQuestion();
+  </script>
+</body>
+</html>
